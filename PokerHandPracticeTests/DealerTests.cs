@@ -39,7 +39,6 @@ namespace PokerHandPracticeTests
             expected.ToExpectedObject().ShouldMatch(actual);
         }
 
-
         [Test()]
         public void player_category()
         {
@@ -56,5 +55,43 @@ namespace PokerHandPracticeTests
             expected.ToExpectedObject().ShouldMatch(actual);
         }
 
+        [Test()]
+        public void Tie()
+        {
+            var records = "Black: 2H 3D 5S 9C KD  White: 2C 3C 5C 9H KC";
+
+            var dealer = new Dealer();
+            var actual = dealer.Settle(records);
+
+            Assert.AreEqual("Tie", actual);
+        }
+
+        [Test()]
+        public void highCard_check()
+        {
+            var records = "Black: 2H 3D 5S 9C KD";
+
+            var dealer = new Dealer();
+            var actual = dealer.CreatePlayer(records);
+
+            Assert.AreEqual("K", actual.HighCard);
+        }
+
+        [Test()]
+        public void test_category()
+        {
+            Assert.IsTrue(Category.Pair > Category.HighCard);
+        }
+
+        [Test()]
+        public void high_card_first_win()
+        {
+            var records = "Black: 2H 3D 5S 9C KD  White: 2C 3C 5C 9H QC";
+        
+            var dealer = new Dealer();
+            var actual = dealer.Settle(records);
+        
+            Assert.AreEqual("Black wins. - with high card: K", actual);
+        }
     }
 }

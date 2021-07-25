@@ -2,6 +2,7 @@
 {
     public enum Category
     {
-        HighCard
+        HighCard,
+            Pair
     }
 }
