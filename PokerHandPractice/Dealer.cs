@@ -13,8 +13,20 @@ namespace PokerHandPractice
             {
                 Name = record.Split(':')[0],
                 Hand = extractHand,
-                HighCard = highCard
+                HighCard = highCard,
+                Category = GetCategory(extractHand)
             };
+        }
+
+        private Category GetCategory(string hand)
+        {
+            var pointCount = hand.Split(' ').Select(x => x.Substring(0, 1)).GroupBy(x => x).Count();
+            if (pointCount == 5)
+                return Category.HighCard;
+            else
+            {
+                return Category.Pair;
+            }
         }
 
         private static string ExtractHand(string record)
