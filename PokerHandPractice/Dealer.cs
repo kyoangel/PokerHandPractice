@@ -8,17 +8,33 @@ namespace PokerHandPractice
         public Player CreatePlayer(string record)
         {
             var extractHand = ExtractHand(record);
-            var highCard = extractHand.Split(' ').Select(x => x.Substring(0, 1)).OrderByDescending(x => x, new CardComparer()).First();
+            var category = GetCategory(extractHand);
+            var highCard = GetWinCard(extractHand);
             return new Player()
             {
                 Name = record.Split(':')[0],
                 Hand = extractHand,
                 HighCard = highCard,
-                Category = GetCategory(extractHand)
+                Category = category
             };
         }
 
-        private Category GetCategory(string hand)
+        private static string GetWinCard(string extractHand)
+        {
+            var category = GetCategory(extractHand);
+            var handValues = extractHand.Split(' ').Select(x => x.Substring(0, 1));
+            switch (category)
+            {
+                case Category.Pair:
+                    return handValues.GroupBy(x => x).First(g => Enumerable.Count<string>(g) == 2).Key;
+
+                case Category.HighCard:
+                default:
+                    return handValues.OrderByDescending(x => x, new CardComparer()).First();
+            }
+        }
+
+        private static Category GetCategory(string hand)
         {
             var pointCount = hand.Split(' ').Select(x => x.Substring(0, 1)).GroupBy(x => x).Count();
             if (pointCount == 5)
@@ -39,7 +55,11 @@ namespace PokerHandPractice
             var hands = records.Split(new[] { "  " }, StringSplitOptions.None);
             var firstPlayer = CreatePlayer(hands[0]);
             var secondPlayer = CreatePlayer(hands[1]);
-            if (firstPlayer.Category >= secondPlayer.Category)
+            if (firstPlayer.Category > secondPlayer.Category)
+            {
+                return $"{firstPlayer.Name} wins. - with {firstPlayer.Category.ToDisplayName()}: {firstPlayer.HighCard}";
+            }
+            if (firstPlayer.Category == secondPlayer.Category)
             {
                 Player winner = null;
                 if (firstPlayer.HighCard == secondPlayer.HighCard)
