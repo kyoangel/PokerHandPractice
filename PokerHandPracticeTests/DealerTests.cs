@@ -87,11 +87,22 @@ namespace PokerHandPracticeTests
         public void high_card_first_win()
         {
             var records = "Black: 2H 3D 5S 9C KD  White: 2C 3C 5C 9H QC";
-        
+
             var dealer = new Dealer();
             var actual = dealer.Settle(records);
-        
+
             Assert.AreEqual("Black wins. - with high card: K", actual);
+        }
+
+        [Test()]
+        public void high_card_second_win()
+        {
+            var records = "Black: 2H 3D 5S 9C KD  White: 2C 3C 5C 9H AC";
+
+            var dealer = new Dealer();
+            var actual = dealer.Settle(records);
+
+            Assert.AreEqual("White wins. - with high card: A", actual);
         }
     }
 }

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 
 namespace PokerHandPractice
@@ -30,52 +29,25 @@ namespace PokerHandPractice
             var secondPlayer = CreatePlayer(hands[1]);
             if (firstPlayer.Category >= secondPlayer.Category)
             {
+                Player winner = null;
                 if (firstPlayer.HighCard == secondPlayer.HighCard)
                 {
                     return "Tie";
                 }
+                else if (CardComparer.TransferCardValue(firstPlayer.HighCard) > CardComparer.TransferCardValue(secondPlayer.HighCard))
+                {
+                    winner = firstPlayer;
+                }
                 else
                 {
-                    return $"{firstPlayer.Name} wins. - with {firstPlayer.Category.ToDisplayName()}: {firstPlayer.HighCard}";
+                    winner = secondPlayer;
                 }
+                return $"{winner.Name} wins. - with {winner.Category.ToDisplayName()}: {winner.HighCard}";
             }
             else
             {
                 return $"{secondPlayer.Name} wins. - with {secondPlayer.Category.ToDisplayName()}: {secondPlayer.HighCard}";
             }
         }
-    }
-
-    public class CardComparer : IComparer<string>
-    {
-        private readonly Dictionary<string, int> _valueLookup = new Dictionary<string, int>()
-        {
-            {"2", 2},
-            {"3", 3},
-            {"4", 4},
-            {"5", 5},
-            {"6", 6},
-            {"7", 7},
-            {"8", 8},
-            {"9", 8},
-            {"T", 10},
-            {"J", 11},
-            {"Q", 12},
-            {"K", 13},
-            {"A", 14},
-        };
-
-        public int Compare(string x, string y)
-        {
-            return _valueLookup[x] - _valueLookup[y];
-        }
-    }
-
-    public class Player
-    {
-        public string Name { get; set; }
-        public string Hand { get; set; }
-        public Category Category { get; set; }
-        public string HighCard { get; set; }
     }
 }
